@@ -278,30 +278,13 @@ public class NonNull implements Flow.Analysis {
         }
     }
 
-    final public static int LEVEL_NORMAL = 0;
-    final public static int LEVEL_HIGH = 1;
-    private int level;
     private CheckTable[] in, out;
     private CheckTable entry, exit;
     private TransferFunction transferfn;
     private ControlFlowGraph graph;
 
     public NonNull() {
-        level = LEVEL_NORMAL;
-        transferfn = new TransferFunction(level);
-    }
-
-    public NonNull(int lv) {
-        switch (lv) {
-            case LEVEL_HIGH:
-                level = lv;
-                break;
-            case LEVEL_NORMAL:
-            default:
-                level = LEVEL_NORMAL;
-                break;
-        }
-        transferfn = new TransferFunction(level);
+        transferfn = new TransferFunction();
     }
 
     public void preprocess(ControlFlowGraph cfg) {
@@ -458,27 +441,13 @@ public class NonNull implements Flow.Analysis {
     /* The QuadVisitor that actually does the computation */
     public static class TransferFunction extends QuadVisitor.EmptyVisitor {
         CheckTable val;
-        int checkLevel;
 
-        TransferFunction(int lv) {
-            checkLevel = lv;
-        }
+        TransferFunction() {}
 
         @Override
         public void visitQuad(Quad q) {
-            if (checkLevel == NonNull.LEVEL_NORMAL) {
-                if (q.getOperator() instanceof Operator.NullCheck) {
-                    return;
-                }
-            } else {
-                Operator oprt = q.getOperator();
-                if (oprt instanceof Operator.NullCheck ||
-                        oprt instanceof Operator.IntIfCmp ||
-                        oprt instanceof Operator.Move ||
-                        oprt instanceof Operator.Binary ||
-                        oprt instanceof Operator.Unary) {
-                    return;
-                }
+            if (q.getOperator() instanceof Operator.NullCheck) {
+                return;
             }
 
             for (RegisterOperand def : q.getDefinedRegisters()) {
@@ -508,104 +477,6 @@ public class NonNull implements Flow.Analysis {
         public void visitIntIfCmp(Quad q) {
             final byte EQ = 0;
             final byte NE = 1;
-            if (checkLevel != NonNull.LEVEL_NORMAL) {
-                Operand s1 = Operator.IntIfCmp.getSrc1(q);
-                Operand s2 = Operator.IntIfCmp.getSrc2(q);
-                TargetOperand targBranch = Operator.IntIfCmp.getTarget(q);
-
-                byte cond = Operator.IntIfCmp.getCond(q).getCondition();
-                int targBBid = targBranch.getTarget().getID();
-
-                // only do this when at least one of opr is reg
-                if (s1 instanceof RegisterOperand && !(s2 instanceof RegisterOperand) ||
-                        s2 instanceof RegisterOperand && !(s1 instanceof RegisterOperand)) {
-                    Operand reg = s1 instanceof RegisterOperand ? s1 : s2;
-                    Operand other = s1 instanceof RegisterOperand ? s2 : s1;
-                    String regName = ((RegisterOperand) reg).getRegister().toString();
-                    // now ensure reg is register oprd
-
-                    if (cond == EQ) {
-                        if (isChecked(other)) {
-                            val.checkVarWithBranch(regName, true, targBBid);
-                        } else if (isNull(other)) {
-                            val.checkVarWithBranch(regName, false, targBBid);
-                        }
-                    } else if (cond == NE) {
-                        if (isNull(other)) {
-                            val.checkVarWithBranch(regName, true, targBBid);
-                        } else if (isChecked(other)) {
-                            val.checkVarWithBranch(regName, false, targBBid);
-                        }
-                    }
-                } else if (s1 instanceof RegisterOperand && s2 instanceof RegisterOperand) {
-                    RegisterOperand r1 = (RegisterOperand) s1;
-                    RegisterOperand r2 = (RegisterOperand) s2;
-                    String reg1 = r1.getRegister().toString();
-                    String reg2 = r2.getRegister().toString();
-                    if (cond == EQ) {
-                        if (isChecked(r1)) {
-                            val.checkVarWithBranch(reg2, true, targBBid);
-                        } else if (isNull(r1)) {
-                            val.checkVarWithBranch(reg2, false, targBBid);
-                        } else if (isChecked(r2)) {
-                            val.checkVarWithBranch(reg1, true, targBBid);
-                        } else if (isNull(r2)) {
-                            val.checkVarWithBranch(reg1, false, targBBid);
-                        }
-                    } else if (cond == NE) {
-                        if (isChecked(r1)) {
-                            val.checkVarWithBranch(reg2, false, targBBid);
-                        } else if (isNull(r1)) {
-                            val.checkVarWithBranch(reg2, true, targBBid);
-                        } else if (isChecked(r2)) {
-                            val.checkVarWithBranch(reg1, false, targBBid);
-                        } else if (isNull(r2)) {
-                            val.checkVarWithBranch(reg1, true, targBBid);
-                        }
-                    }
-
-                }
-            }
-        }
-
-        @Override
-        public void visitMove(Quad q) {
-            if (checkLevel != NonNull.LEVEL_NORMAL) {
-                Operand src = Operator.Move.getSrc(q);
-                String dst = Operator.Move.getDest(q).getRegister().toString();
-                if (isChecked(src)){
-                    val.checkVar(dst);
-                } else {
-                    val.killVar(dst);
-                }
-            }
-        }
-
-        @Override
-        public void visitUnary(Quad q) {
-            if (checkLevel != NonNull.LEVEL_NORMAL) {
-                String dst = Operator.Unary.getDest(q).getRegister().toString();
-                Operand src = Operator.Unary.getSrc(q);
-                if (isChecked(src)){
-                    val.checkVar(dst);
-                } else {
-                    val.killVar(dst);
-                }
-            }
-        }
-
-        @Override
-        public void visitBinary(Quad q) {
-            if (checkLevel != NonNull.LEVEL_NORMAL) {
-                String dst = Operator.Binary.getDest(q).getRegister().toString();
-                Operand src1 = Operator.Binary.getSrc1(q);
-                Operand src2 = Operator.Binary.getSrc2(q);
-                if (isChecked(src1) && isChecked(src2)){
-                    val.checkVar(dst);
-                } else {
-                    val.killVar(dst);
-                }
-            }
         }
 
         private boolean isChecked(Operand op) {
