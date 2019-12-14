@@ -7,8 +7,8 @@ import joeq.Class.jq_Class;
 import joeq.Interpreter.QuadInterpreter;
 import joeq.Main.Driver;
 import joeq.Main.Helper;
-import submit.NonNull;
-import submit.NullCheckEliminate;
+import submit.NullAnalysis;;
+import submit.NullModifier;;
 
 import java.util.*;
 
@@ -26,8 +26,8 @@ class Optimize {
         driver.registerSolver(solver);
 
         // Redundant null check
-        Flow.Analysis nonNullAnalysis = new NonNull();
-        NullCheckEliminate nullCheck = new NullCheckEliminate();
+        Flow.Analysis nonNullAnalysis = new NullAnalysis();
+        NullModifier nullCheck = new NullModifier();
 
 
         List<jq_Class> outputs = new ArrayList<jq_Class>();

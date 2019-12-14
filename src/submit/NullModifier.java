@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class NullCheckEliminate implements Modifier {
+public class NullModifier implements Modifier {
     private Map<jq_Method, Set<Integer>> flowResult;
     private boolean isForward;
 

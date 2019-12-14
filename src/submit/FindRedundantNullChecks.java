@@ -4,7 +4,7 @@ import flow.Flow;
 import flow.FlowSolver;
 import joeq.Class.jq_Class;
 import joeq.Main.Helper;
-import submit.NonNull;
+import submit.NullAnalysis;;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class FindRedundantNullChecks {
 
 
         // get an instance of the analysis class.
-        Flow.Analysis analysis = new NonNull();
+        Flow.Analysis analysis = new NullAnalysis();
 
         // get the classes we will be visiting.
         jq_Class[] classes = new jq_Class[args.size()];

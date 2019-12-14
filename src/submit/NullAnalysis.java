@@ -12,7 +12,7 @@ import joeq.Main.Helper;
 
 import java.util.*;
 
-public class NonNull implements Flow.Analysis {
+public class NullAnalysis implements Flow.Analysis {
 
     public static class SingleVar implements Flow.DataflowObject {
         public final static int UDF = 0;    // UNDEF
