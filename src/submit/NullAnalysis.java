@@ -84,7 +84,7 @@ public class NullAnalysis implements Flow.Analysis {
         java.util.Collections.sort(quadlist);
         int i;
         for (i=0;i<quadlist.size();i++){
-            System.out.print(quadlist.get(i)+ " " + "gg");
+            System.out.print(quadlist.get(i)+ " ");
         }
         System.out.println();		
     }
