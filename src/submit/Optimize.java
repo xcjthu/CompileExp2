@@ -22,7 +22,6 @@ class Optimize {
             jq_Class clazz = (jq_Class) Helper.load(className);
 
             // TODO: Remove redundant null checks
-
             if (!nullCheckOnly) {
                 // TODO: Run your extra optimizations. (Not required)
             }
