@@ -77,7 +77,6 @@ public class NullAnalysis implements Flow.Analysis {
                 for (Operand.RegisterOperand def : qd.getUsedRegisters()){
                     if (checkInc2(s,def.getRegister().toString())){
                         quadlist.add(qd.getID());
-                        //System.out.print(qd.getID()+ " ");
                     }
                 }
             }
@@ -85,7 +84,7 @@ public class NullAnalysis implements Flow.Analysis {
         java.util.Collections.sort(quadlist);
         int i;
         for (i=0;i<quadlist.size();i++){
-            System.out.print(quadlist.get(i)+ " ");
+            System.out.print(quadlist.get(i)+ " " + "gg");
         }
         System.out.println();		
     }
