@@ -4,7 +4,7 @@ import flow.Flow;
 import flow.FlowSolver;
 import joeq.Class.jq_Class;
 import joeq.Main.Helper;
-import submit.NullAnalysis;;
+import submit.NullAnalysis;
 
 import java.util.*;
 

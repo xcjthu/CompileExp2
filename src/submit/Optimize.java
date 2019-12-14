@@ -7,8 +7,8 @@ import joeq.Class.jq_Class;
 import joeq.Interpreter.QuadInterpreter;
 import joeq.Main.Driver;
 import joeq.Main.Helper;
-import submit.NullAnalysis;;
-import submit.NullModifier;;
+import submit.NullAnalysis;
+import submit.NullModifier;
 
 import java.util.*;
 

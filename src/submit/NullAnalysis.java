@@ -283,7 +283,7 @@ public class NullAnalysis implements Flow.Analysis {
     private TransferFunction transferfn;
     private ControlFlowGraph graph;
 
-    public NonNull() {
+    public NullAnalysis() {
         transferfn = new TransferFunction();
     }
 

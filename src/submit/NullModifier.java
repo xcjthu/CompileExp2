@@ -21,7 +21,7 @@ public class NullModifier implements Modifier {
     }
 
     public void getDataFlowResult(Flow.Analysis analysis) {
-        flowResult = new HashMap<jq_Method, Set<Integer>>(((NonNull)analysis).allResult);
+        flowResult = new HashMap<jq_Method, Set<Integer>>(((NullAnalysis)analysis).allResult);
         isForward = analysis.isForward();
     }
 
