@@ -21,9 +21,9 @@ public class FindRedundantNullChecks {
         
         // Flow.Analysis analysis = new NonNull(NonNull.LEVEL_NORMAL);
 
-        jq_Class[] classes = new jq_Class[args.size()];
+        jq_Class[] classes = new jq_Class[args.length];
         for (int i = 0; i < classes.length; i++)
-            classes[i] = (jq_Class) Helper.load(args.get(i));
+            classes[i] = (jq_Class) Helper.load(args[i]);
         
             solver.registerAnalysis(new NullAnalysis());
         for (int i = 0; i < classes.length; i++) {
