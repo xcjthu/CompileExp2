@@ -17,15 +17,15 @@ public class FindRedundantNullChecks {
      */
     public static void main(String[] args) {
         // TODO: Fill in this, like:
-        Flow.Solver solver = new FlowSolver();
-        
+        // Flow.Solver solver = new FlowSolver();
+        ReferenceSolver solve = new ReferenceSolver();
         // Flow.Analysis analysis = new NonNull(NonNull.LEVEL_NORMAL);
 
         jq_Class[] classes = new jq_Class[args.length];
         for (int i = 0; i < classes.length; i++)
             classes[i] = (jq_Class) Helper.load(args[i]);
         
-            solver.registerAnalysis(new NullAnalysis());
+        solver.registerAnalysis(new NullAnalysis());
         for (int i = 0; i < classes.length; i++) {
             Helper.runPass(classes[i], solver);
         }
