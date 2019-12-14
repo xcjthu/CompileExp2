@@ -26,7 +26,7 @@ class Optimize {
         driver.registerSolver(solver);
 
         // Redundant null check
-        Flow.Analysis nonNullAnalysis = new NonNull(NonNull.LEVEL_NORMAL);
+        Flow.Analysis nonNullAnalysis = new NonNull();
         NullCheckEliminate nullCheck = new NullCheckEliminate();
 
 
